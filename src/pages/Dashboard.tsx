@@ -25,7 +25,7 @@ export function Dashboard({ openPositions, recentlyClosed, onOpen, onClose }: Da
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">Your Shorts</h1>
           {openPositions.length === 0 && (
-            <p className="text-gray-400 text-sm mt-0.5">You have no open positions. Find a company to hate on.</p>
+            <p className="text-gray-400 text-sm mt-0.5">No open positions.</p>
           )}
         </div>
         <button
@@ -39,12 +39,13 @@ export function Dashboard({ openPositions, recentlyClosed, onOpen, onClose }: Da
       {/* Empty state */}
       {openPositions.length === 0 && (
         <div
-          className="border-2 border-dashed border-gray-200 rounded-2xl p-16 text-center cursor-pointer hover:border-bear-tealLight hover:bg-bear-tealPale/30 transition-colors"
+          className="border-2 border-dashed border-gray-200 rounded-2xl p-12 text-center cursor-pointer hover:border-bear-tealLight hover:bg-bear-tealPale/30 transition-colors"
           onClick={() => setShowModal(true)}
         >
-          <div className="text-6xl mb-4">🐻</div>
-          <h3 className="text-lg font-bold text-gray-500 mb-1">No positions yet</h3>
-          <p className="text-gray-400 text-sm">Click to find a company you hate and short it</p>
+          <div className="text-6xl mb-5">🐻</div>
+          <h3 className="text-2xl font-extrabold text-gray-700 mb-2">Don't leave a 1-star review.</h3>
+          <p className="text-gray-400 text-base mb-1">Short the stock instead.</p>
+          <p className="text-gray-300 text-sm">Put your money where your anger is.</p>
         </div>
       )}
 

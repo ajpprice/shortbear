@@ -1,6 +1,18 @@
 import type { MockStock, Duration } from './types'
 
 export const MOCK_STOCKS: MockStock[] = [
+  { ticker: 'TRST', name: 'Trustpilot', sector: 'Reviews', basePrice: 58, volatility: 0.038, drift: -0.0018, bearishFlavor: 'Sells fake review removal. The reviews are also fake.' },
+  { ticker: 'CBLE', name: 'CableCo Inc', sector: 'Telecom', basePrice: 43, volatility: 0.019, drift: -0.0007, bearishFlavor: '7-hour service window. Tech never showed.' },
+  { ticker: 'AIRL', name: 'BudgetWings Air', sector: 'Airlines', basePrice: 11, volatility: 0.048, drift: -0.0014, bearishFlavor: 'Charges for carry-on, window seat, and leg room. Working on charging for oxygen.' },
+  { ticker: 'WLLS', name: 'WellsDeep Bank', sector: 'Banking', basePrice: 52, volatility: 0.022, drift: -0.0009, bearishFlavor: 'Opened 4 accounts in your name. Very sorry about it.' },
+  { ticker: 'PDAY', name: 'QuickCash Lending', sector: 'Fintech', basePrice: 29, volatility: 0.041, drift: -0.0021, bearishFlavor: 'APR: 847%. But it\'s short-term so it\'s fine.' },
+  { ticker: 'DENY', name: 'DenyFirst Insurance', sector: 'Insurance', basePrice: 88, volatility: 0.017, drift: -0.0006, bearishFlavor: 'Claims processing time: geological era.' },
+  { ticker: 'TICK', name: 'TicketMark Inc', sector: 'Entertainment', basePrice: 67, volatility: 0.034, drift: -0.0013, bearishFlavor: 'Convenience fee: $47. Convenience: none.' },
+  { ticker: 'SURG', name: 'SurgeRide Corp', sector: 'Transport', basePrice: 38, volatility: 0.039, drift: -0.0011, bearishFlavor: 'Multiplier: 4.2x. Reason: it\'s drizzling.' },
+  { ticker: 'DLVR', name: 'DashSurge Delivery', sector: 'Delivery', basePrice: 31, volatility: 0.043, drift: -0.0016, bearishFlavor: 'Food arrived cold. Delivery fee was hot.' },
+  { ticker: 'DRUG', name: 'PharmaPump Inc', sector: 'Pharma', basePrice: 176, volatility: 0.033, drift: -0.0008, bearishFlavor: 'Raised insulin price 4,000%. Called it innovation.' },
+  { ticker: 'RENT', name: 'RentSeek Realty', sector: 'PropTech', basePrice: 94, volatility: 0.028, drift: -0.001, bearishFlavor: 'Listed at $1,800/mo. Actually $2,600 after fees.' },
+  { ticker: 'CELL', name: 'SignalDrop Wireless', sector: 'Telecom', basePrice: 119, volatility: 0.016, drift: -0.0005, bearishFlavor: '5G everywhere except where you are.' },
   { ticker: 'HVAC', name: 'HotAir Corp', sector: 'Media', basePrice: 142, volatility: 0.035, drift: -0.0012, bearishFlavor: 'CEO hasn\'t shown up in 3 weeks' },
   { ticker: 'PONZ', name: 'Ponzi Analytics', sector: 'Fintech', basePrice: 87, volatility: 0.045, drift: -0.002, bearishFlavor: 'Revenue consists entirely of vibes' },
   { ticker: 'BLMP', name: 'Blimpo Foods', sector: 'Consumer', basePrice: 34, volatility: 0.018, drift: 0.0003, bearishFlavor: 'FDA letter pending, execs very calm about it' },
@@ -26,7 +38,7 @@ export const MOCK_STOCKS: MockStock[] = [
   { ticker: 'PUFF', name: 'PuffBrand Co', sector: 'Consumer', basePrice: 47, volatility: 0.024, drift: -0.0005, bearishFlavor: 'Marketing budget larger than R&D by 40x' },
   { ticker: 'BLEH', name: 'Bleh Pharma', sector: 'Pharma', basePrice: 134, volatility: 0.04, drift: -0.001, bearishFlavor: 'Phase 3 trial results: "mixed"' },
   { ticker: 'GLOP', name: 'Gloptech', sector: 'Hardware', basePrice: 82, volatility: 0.029, drift: -0.0008, bearishFlavor: 'Supply chain consists of wishes and prayers' },
-  { ticker: 'CRUD', name: 'Crudacious Retail', sector: 'Retail', basePrice: 27, volatility: 0.033, drift: -0.0012, bearishFlavor: 'Store count decreasing. Confidence: also decreasing.' },
+  { ticker: 'DRGE', name: 'Dredge Retail', sector: 'Retail', basePrice: 27, volatility: 0.033, drift: -0.0012, bearishFlavor: 'Store count decreasing. Confidence: also decreasing.' },
   { ticker: 'NOPE', name: 'NopeCloud', sector: 'Cloud', basePrice: 176, volatility: 0.031, drift: -0.0009, bearishFlavor: '99.1% uptime, despite advertising 99.99%' },
   { ticker: 'BNKR', name: 'Bunkered Finance', sector: 'Banking', basePrice: 64, volatility: 0.019, drift: -0.0006, bearishFlavor: 'Derivative exposure: classified' },
   { ticker: 'WREK', name: 'Wreckonomics', sector: 'Consulting', basePrice: 112, volatility: 0.023, drift: -0.0007, bearishFlavor: 'Has never successfully completed a project on time' },
