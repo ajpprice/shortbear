@@ -148,6 +148,13 @@ export function PositionCard({ position, onClose }: PositionCardProps) {
         )}
       </div>
 
+      {/* The receipt — user's review */}
+      {position.receipt && (
+        <div className="mb-4 px-3 py-2 bg-bear-cream/60 border-l-2 border-bear-teal rounded-r-md">
+          <p className="text-xs text-gray-600 italic leading-snug">"{position.receipt}"</p>
+        </div>
+      )}
+
       {/* Margin bar (only for open positions) */}
       {!isClosed && (
         <div className="mb-4">

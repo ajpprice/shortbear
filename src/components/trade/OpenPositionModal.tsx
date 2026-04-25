@@ -3,12 +3,13 @@ import type { Duration } from '../../types'
 import { MOCK_STOCKS, DURATION_OPTIONS } from '../../constants'
 
 interface OpenPositionModalProps {
-  onOpen: (ticker: string, duration: Duration, margin: number) => void
+  onOpen: (ticker: string, duration: Duration, margin: number, receipt: string) => void
   onClose: () => void
   existingTickers: string[]
 }
 
-type Step = 'company' | 'duration' | 'margin' | 'confirm'
+type Step = 'company' | 'receipt' | 'duration' | 'margin' | 'confirm'
+const STEPS: Step[] = ['company', 'receipt', 'duration', 'margin', 'confirm']
 
 export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPositionModalProps) {
   const [step, setStep] = useState<Step>('company')
@@ -16,6 +17,7 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
   const [selectedTicker, setSelectedTicker] = useState('')
   const [selectedDuration, setSelectedDuration] = useState<Duration>('1W')
   const [marginInput, setMarginInput] = useState('')
+  const [receipt, setReceipt] = useState('')
 
   const stock = MOCK_STOCKS.find(s => s.ticker === selectedTicker)
   const durationConfig = DURATION_OPTIONS.find(d => d.value === selectedDuration)!
@@ -36,14 +38,20 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
   }, [onClose])
 
   const handleSubmit = () => {
-    if (!stock || !margin || margin <= 0) return
-    onOpen(selectedTicker, selectedDuration, margin)
+    if (!stock || !margin || margin <= 0 || !receipt.trim()) return
+    onOpen(selectedTicker, selectedDuration, margin, receipt.trim())
     onClose()
   }
 
   const expiryDate = new Date(Date.now() + durationConfig.days * 86400000).toLocaleDateString('en-US', {
     month: 'short', day: 'numeric', year: 'numeric'
   })
+
+  const canAdvance =
+    (step === 'receipt' && receipt.trim().length >= 10) ||
+    (step === 'duration') ||
+    (step === 'margin' && margin > 0) ||
+    (step === 'confirm')
 
   return (
     <div
@@ -54,14 +62,14 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
         {/* Modal header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100 flex-shrink-0">
           <div>
-            <h2 className="font-bold text-xl text-gray-900">Open a Short</h2>
+            <h2 className="font-bold text-xl text-gray-900">Write Your Review</h2>
             <div className="flex gap-1 mt-2">
-              {(['company', 'duration', 'margin', 'confirm'] as Step[]).map((s, i) => (
+              {STEPS.map((s, i) => (
                 <div
                   key={s}
                   className={`h-1 rounded-full transition-all ${
                     step === s ? 'w-6 bg-bear-teal' :
-                    (['company', 'duration', 'margin', 'confirm'] as Step[]).indexOf(step) > i
+                    STEPS.indexOf(step) > i
                       ? 'w-3 bg-bear-tealLight' : 'w-3 bg-gray-200'
                   }`}
                 />
@@ -82,7 +90,7 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
           {/* Step 1: Company */}
           {step === 'company' && (
             <div>
-              <p className="text-sm text-gray-500 mb-4">Pick the company you want to bag on.</p>
+              <p className="text-sm text-gray-500 mb-4">Who wronged you? Pick the company.</p>
               <input
                 type="text"
                 placeholder="Search by name, ticker, or sector…"
@@ -95,7 +103,7 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
                 {filteredStocks.map(s => (
                   <button
                     key={s.ticker}
-                    onClick={() => { setSelectedTicker(s.ticker); setStep('duration') }}
+                    onClick={() => { setSelectedTicker(s.ticker); setStep('receipt') }}
                     className={`w-full text-left rounded-xl px-4 py-3 transition-colors border ${
                       selectedTicker === s.ticker
                         ? 'border-bear-teal bg-bear-tealPale'
@@ -120,7 +128,40 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
             </div>
           )}
 
-          {/* Step 2: Duration */}
+          {/* Step 2: Receipt */}
+          {step === 'receipt' && stock && (
+            <div>
+              <div className="flex items-center gap-2 mb-4 p-3 bg-bear-tealPale rounded-xl">
+                <span className="font-bold text-bear-tealDark">{stock.ticker}</span>
+                <span className="text-gray-500 text-sm">{stock.name}</span>
+                <span className="ml-auto font-semibold text-gray-700">${stock.basePrice.toFixed(2)}</span>
+              </div>
+              <p className="text-sm text-gray-500 mb-1">What's your beef with {stock.name}?</p>
+              <p className="text-xs text-gray-400 mb-3">This is your receipt. It gets attached to the position. Don't just rant — back it.</p>
+              <textarea
+                value={receipt}
+                onChange={e => setReceipt(e.target.value.slice(0, 280))}
+                placeholder={stock.bearishFlavor}
+                rows={4}
+                className="w-full border-2 border-gray-200 focus:border-bear-teal rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors resize-none"
+                autoFocus
+              />
+              <div className="flex justify-between text-xs mt-1.5">
+                <span className={receipt.trim().length < 10 ? 'text-gray-400' : 'text-bear-tealDark'}>
+                  {receipt.trim().length < 10 ? `${10 - receipt.trim().length} more chars` : '✓ Receipt ready'}
+                </span>
+                <span className="text-gray-400">{receipt.length}/280</span>
+              </div>
+              <button
+                onClick={() => setReceipt(stock.bearishFlavor)}
+                className="mt-3 text-xs text-bear-tealDark hover:underline"
+              >
+                Use suggestion ↑
+              </button>
+            </div>
+          )}
+
+          {/* Step 3: Duration */}
           {step === 'duration' && stock && (
             <div>
               <div className="flex items-center gap-2 mb-4 p-3 bg-bear-tealPale rounded-xl">
@@ -151,7 +192,7 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
             </div>
           )}
 
-          {/* Step 3: Margin */}
+          {/* Step 4: Margin */}
           {step === 'margin' && stock && (
             <div>
               <div className="flex items-center justify-between mb-4 p-3 bg-bear-tealPale rounded-xl">
@@ -222,12 +263,12 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
             </div>
           )}
 
-          {/* Step 4: Confirm */}
+          {/* Step 5: Confirm */}
           {step === 'confirm' && stock && (
             <div className="text-center py-4">
               <div className="text-6xl mb-4">🐻</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1">Ready to short {stock.ticker}?</h3>
-              <p className="text-gray-500 text-sm mb-6 italic">"{stock.bearishFlavor}"</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">File this review on {stock.ticker}?</h3>
+              <p className="text-gray-500 text-sm mb-5 italic">"{receipt}"</p>
               <div className="bg-gray-50 rounded-xl p-4 text-left space-y-2.5 text-sm mb-6">
                 <div className="flex justify-between"><span className="text-gray-500">Company</span><span className="font-semibold">{stock.name}</span></div>
                 <div className="flex justify-between"><span className="text-gray-500">Entry price</span><span className="font-semibold">${stock.basePrice.toFixed(2)}</span></div>
@@ -237,7 +278,7 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
                 <div className="flex justify-between text-red-500 border-t border-gray-200 pt-2"><span>Stop loss at</span><span className="font-bold">${stopLossPrice.toFixed(2)}</span></div>
                 <div className="flex justify-between font-bold text-red-500"><span>Max loss</span><span>-${margin.toFixed(2)}</span></div>
               </div>
-              <p className="text-xs text-gray-400 mb-4">This is simulated trading. No real money involved.</p>
+              <p className="text-xs text-gray-400 mb-4">Simulated trading. No real money — yet.</p>
             </div>
           )}
         </div>
@@ -247,9 +288,8 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
           {step !== 'company' && (
             <button
               onClick={() => {
-                const steps: Step[] = ['company', 'duration', 'margin', 'confirm']
-                const idx = steps.indexOf(step)
-                setStep(steps[idx - 1])
+                const idx = STEPS.indexOf(step)
+                setStep(STEPS[idx - 1])
               }}
               className="flex-1 py-3 rounded-xl border-2 border-gray-200 font-semibold text-gray-600 hover:border-gray-300 transition-colors"
             >
@@ -258,24 +298,20 @@ export function OpenPositionModal({ onOpen, onClose, existingTickers }: OpenPosi
           )}
           <button
             onClick={() => {
-              if (step === 'company') return // handled by stock click
-              if (step === 'duration') setStep('margin')
-              else if (step === 'margin') {
-                if (margin > 0) setStep('confirm')
-              }
-              else if (step === 'confirm') handleSubmit()
+              if (step === 'company') return
+              if (step === 'confirm') { handleSubmit(); return }
+              if (!canAdvance) return
+              const idx = STEPS.indexOf(step)
+              setStep(STEPS[idx + 1])
             }}
-            disabled={
-              (step === 'margin' && margin <= 0) ||
-              step === 'company'
-            }
+            disabled={step === 'company' || !canAdvance}
             className={`flex-1 py-3 rounded-xl font-bold transition-colors ${
-              step === 'company'
+              step === 'company' || !canAdvance
                 ? 'bg-gray-100 text-gray-400 cursor-default'
                 : 'bg-bear-teal text-white hover:bg-bear-tealDark active:scale-[0.98]'
             }`}
           >
-            {step === 'confirm' ? '🐻 Short it!' : 'Next →'}
+            {step === 'confirm' ? '🐻 File the review' : 'Next →'}
           </button>
         </div>
       </div>

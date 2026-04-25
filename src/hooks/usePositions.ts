@@ -18,7 +18,7 @@ export function usePositions() {
     })
   }, [])
 
-  const openShort = useCallback((ticker: string, duration: Duration, marginAmount: number) => {
+  const openShort = useCallback((ticker: string, duration: Duration, marginAmount: number, receipt: string) => {
     const stock = MOCK_STOCKS.find(s => s.ticker === ticker)
     if (!stock) return
 
@@ -42,6 +42,7 @@ export function usePositions() {
       marginAmount,
       shares,
       stopLossPrice,
+      receipt,
       currentPrice: entryPrice,
       priceHistory: [{ timestamp: now, price: entryPrice }],
       closedAt: null,

@@ -7,7 +7,7 @@ import { OpenPositionModal } from '../components/trade/OpenPositionModal'
 interface DashboardProps {
   openPositions: ShortPosition[]
   recentlyClosed: ShortPosition[]
-  onOpen: (ticker: string, duration: Duration, margin: number) => void
+  onOpen: (ticker: string, duration: Duration, margin: number, receipt: string) => void
   onClose: (id: string) => void
 }
 

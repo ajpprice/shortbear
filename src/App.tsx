@@ -19,8 +19,8 @@ export default function App() {
     openPositions.reduce((s, p) => s + computePnL(p), 0) +
     closedPositions.reduce((s, p) => s + (p.finalPnL ?? 0), 0)
 
-  const handleOpen = (ticker: string, duration: Duration, margin: number) => {
-    openShort(ticker, duration, margin)
+  const handleOpen = (ticker: string, duration: Duration, margin: number, receipt: string) => {
+    openShort(ticker, duration, margin, receipt)
   }
 
   const handleClose = (id: string) => {

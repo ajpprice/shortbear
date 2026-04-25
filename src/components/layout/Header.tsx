@@ -17,8 +17,8 @@ export function Header({ view, onViewChange, totalPnL }: HeaderProps) {
             🐻
           </div>
           <div>
-            <span className="font-extrabold text-xl text-bear-brown tracking-tight">Short Bear</span>
-            <span className="hidden sm:block text-xs text-gray-400 font-medium -mt-0.5">Don't review it. Short it.</span>
+            <span className="font-extrabold text-xl text-bear-brown tracking-tight">overvalued<span className="text-bear-teal">.io</span></span>
+            <span className="hidden sm:block text-xs text-gray-400 font-medium -mt-0.5">Reviews with receipts.</span>
           </div>
         </div>
 
